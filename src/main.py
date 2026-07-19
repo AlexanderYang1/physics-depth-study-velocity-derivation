@@ -28,10 +28,10 @@ def rotate_all():
 
     return np.array(rotated_list)
 
-def graph():
+def integrate():
     rotated = rotate_all()
     vertical = rotated[:, -1]
-    print(vertical)
+    # print(vertical)
     velocity = cumtrapz(vertical) * 0.01
 
     v_t_table = []
@@ -45,7 +45,10 @@ def graph():
     v_t_table = np.array(v_t_table)
     time = v_t_table[:, 0]
     velocity = v_t_table[:, 1]
+    return velocity, time
 
+def graph(vt):
+    velocity, time = vt
     plt.plot(time, velocity, label="Velocity", color="blue", linewidth=1)
     plt.xlabel("Time (seconds)")
     plt.ylabel("Velocity (m/s)")
@@ -53,11 +56,13 @@ def graph():
     plt.savefig(PATH + "out/run-" + OBJECT + str(RUN))
     plt.show()
 
-def find_slope(velo: np.ndarray, time: np.ndarray):
+# Go to middle of slope and fetch gradient
+def find_slope_midsect(vt):
+    velo, time = vt
     diff = np.diff(velo)
     peak = np.argmax(velo)
     baseline = np.median(velo[(peak - 350):(peak - 250)])
-    slope = diff[peak - baseline]
+    slope = velo[peak] -  baseline
 
     low = baseline + slope * 0.2
     high = baseline + slope * 0.9
@@ -65,38 +70,24 @@ def find_slope(velo: np.ndarray, time: np.ndarray):
     i_lo, i_hi = 0, 0
 
     for i in range(peak):
-        if velo[i] <= i_lo:
+        if velo[i] <= low:
             i_lo = i
-        if velo[i] >= i_hi:
+        if velo[i] >= high:
             i_hi = i
 
     ramp_t, ramp_v = [], []
 
     for i in range(i_lo, i_hi):
         ramp_t.append(time[i])
-        ramp_v.append(time[i])
+        ramp_v.append(velo[i])
 
-    return np.polyfit(ramp_v, ramp_t, 1)[0]
-
-
-
-
-
-
-
-
-
-
-
-
+    return np.polyfit(ramp_t, ramp_v, 1)[0]
 
 if __name__ == '__main__':
-    '''
     for i in ['A', 'B']:
         OBJECT = i
         for j in [1, 2, 3, 4, 5]:
             RUN = j
             ACCEL = pd.read_csv(PATH + "data/Obj-" + OBJECT + "-Runs/" + str(RUN) + "/Accelerometer.csv", index_col='time')
             ORIENT = pd.read_csv(PATH + "data/Obj-" + OBJECT + "-Runs/" + str(RUN) + "/Orientation.csv", index_col='time')
-            graph()
-    '''
+            print(i + str(j) + " " + str(find_slope_midsect(integrate())))
