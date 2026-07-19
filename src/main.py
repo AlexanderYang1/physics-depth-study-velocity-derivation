@@ -9,7 +9,6 @@ RUN = 5
 
 PATH = "/Users/alexanderyang/Documents/Main Directory/Programming/physics-depth-study-velocity-derivation/"
 ACCEL = pd.read_csv(PATH + "data/Obj-" + OBJECT + "-Runs/" + str(RUN) + "/Accelerometer.csv", index_col='time')
-ORIENT = pd.read_csv(PATH + "data/Obj-" + OBJECT + "-Runs/" + str(RUN) + "/Orientation.csv", index_col='time')
 
 
 def rotate(vec: np.ndarray, quat: np.ndarray) -> np.ndarray:
@@ -59,4 +58,6 @@ if __name__ == '__main__':
         OBJECT = i
         for j in [1, 2, 3, 4, 5]:
             RUN = j
+            ACCEL = pd.read_csv(PATH + "data/Obj-" + OBJECT + "-Runs/" + str(RUN) + "/Accelerometer.csv", index_col='time')
+            ORIENT = pd.read_csv(PATH + "data/Obj-" + OBJECT + "-Runs/" + str(RUN) + "/Orientation.csv", index_col='time')
             graph()
