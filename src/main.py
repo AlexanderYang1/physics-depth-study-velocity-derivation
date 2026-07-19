@@ -9,7 +9,7 @@ RUN = 5
 
 PATH = "/Users/alexanderyang/Documents/Main Directory/Programming/physics-depth-study-velocity-derivation/"
 ACCEL = pd.read_csv(PATH + "data/Obj-" + OBJECT + "-Runs/" + str(RUN) + "/Accelerometer.csv", index_col='time')
-
+ORIENT = pd.read_csv(PATH + "data/Obj-" + OBJECT + "-Runs/" + str(RUN) + "/Orientation.csv", index_col='time')
 
 def rotate(vec: np.ndarray, quat: np.ndarray) -> np.ndarray:
     rotation = R.from_quat(quat)
@@ -49,11 +49,31 @@ def graph():
     plt.plot(time, velocity, label="Velocity", color="blue", linewidth=1)
     plt.xlabel("Time (seconds)")
     plt.ylabel("Velocity (m/s)")
-    plt.title("Velocity over Time via Integration")
+    plt.title("Velocity over Time")
     plt.savefig(PATH + "out/run-" + OBJECT + str(RUN))
     plt.show()
 
+def break_detection(x: np.ndarray):
+    diff = np.diff(x)
+    max = np.argmax(x)
+    avg_dev = np.mean(diff[(max - 150):max])
+    for i in range(max, -1, -5):
+        loc_avg_dev = np.mean(diff[(max - i - 10):(max - i)])
+        if loc_avg_dev < avg_dev - 0.05:
+            # break
+        else:
+            avg_dev = loc_avg_dev
+
+
+
+
+
+
+
+
+
 if __name__ == '__main__':
+    '''
     for i in ['A', 'B']:
         OBJECT = i
         for j in [1, 2, 3, 4, 5]:
@@ -61,3 +81,4 @@ if __name__ == '__main__':
             ACCEL = pd.read_csv(PATH + "data/Obj-" + OBJECT + "-Runs/" + str(RUN) + "/Accelerometer.csv", index_col='time')
             ORIENT = pd.read_csv(PATH + "data/Obj-" + OBJECT + "-Runs/" + str(RUN) + "/Orientation.csv", index_col='time')
             graph()
+    '''
