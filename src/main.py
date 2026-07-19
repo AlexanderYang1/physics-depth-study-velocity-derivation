@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from scipy.spatial.transform import Rotation as R
-from scipy.integrate import cumulative_trapezoid
+from scipy.integrate import cumulative_trapezoid as cumtrapz
 
 OBJECT = 'A'
 RUN = 1
@@ -29,5 +29,7 @@ def rotate_all():
     return np.array(rotated_list)
 
 if __name__ == "__main__":
-    print(rotate_all())
-
+    rotated = rotate_all()
+    vertical = rotated[:, -1]
+    print(vertical)
+    velocity = cumtrapz(vertical)
