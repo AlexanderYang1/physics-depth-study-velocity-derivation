@@ -4,8 +4,8 @@ from scipy.spatial.transform import Rotation as R
 from scipy.integrate import cumulative_trapezoid as cumtrapz
 import matplotlib.pyplot as plt
 
-OBJECT = 'A'
-RUN = 2
+OBJECT = 'B'
+RUN = 5
 
 PATH = "/Users/alexanderyang/Documents/Main Directory/Programming/physics-depth-study-velocity-derivation/"
 ACCEL = pd.read_csv(PATH + "data/Obj-" + OBJECT + "-Runs/" + str(RUN) + "/Accelerometer.csv", index_col='time')
@@ -29,7 +29,7 @@ def rotate_all():
 
     return np.array(rotated_list)
 
-if __name__ == "__main__":
+def graph():
     rotated = rotate_all()
     vertical = rotated[:, -1]
     print(vertical)
@@ -51,10 +51,12 @@ if __name__ == "__main__":
     plt.xlabel("Time (seconds)")
     plt.ylabel("Velocity (m/s)")
     plt.title("Velocity over Time via Integration")
+    plt.savefig(PATH + "out/run-" + OBJECT + str(RUN))
     plt.show()
 
-
-
-
-
-
+if __name__ == '__main__':
+    for i in ['A', 'B']:
+        OBJECT = i
+        for j in [1, 2, 3, 4, 5]:
+            RUN = j
+            graph()

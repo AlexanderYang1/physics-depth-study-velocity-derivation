@@ -6,4 +6,5 @@ is relative to the device's starting rotation.
 ## References
 https://robotics.stackexchange.com/questions/18446/how-to-transform-raw-accelerometer-data-into-the-earth-fixed-frame-to-determine
 https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.transform.Rotation.html
+https://matplotlib.org
 
