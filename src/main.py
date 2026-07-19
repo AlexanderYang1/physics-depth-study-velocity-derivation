@@ -2,9 +2,10 @@ import numpy as np
 import pandas as pd
 from scipy.spatial.transform import Rotation as R
 from scipy.integrate import cumulative_trapezoid as cumtrapz
+import matplotlib.pyplot as plt
 
 OBJECT = 'A'
-RUN = 1
+RUN = 2
 
 PATH = "/Users/alexanderyang/Documents/Main Directory/Programming/physics-depth-study-velocity-derivation/"
 ACCEL = pd.read_csv(PATH + "data/Obj-" + OBJECT + "-Runs/" + str(RUN) + "/Accelerometer.csv", index_col='time')
@@ -33,3 +34,28 @@ if __name__ == "__main__":
     vertical = rotated[:, -1]
     print(vertical)
     velocity = cumtrapz(vertical)
+
+    v_t_table = []
+
+    i = 0
+    for j in velocity:
+        arr =[i * 0.1, j]
+        v_t_table.append(arr)
+        i += 1
+
+    v_t_table = np.array(v_t_table)
+    time = v_t_table[:, 0]
+    velocity = v_t_table[:, 1]
+
+    plt.plot(time, velocity, label="Velocity", color="blue", linewidth=1)
+    plt.xlabel("Time (seconds)")
+    plt.ylabel("Velocity (m/s)")
+    plt.title("Velocity over Time via Integration")
+    plt.show()
+
+
+
+
+
+
+
