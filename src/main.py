@@ -53,16 +53,34 @@ def graph():
     plt.savefig(PATH + "out/run-" + OBJECT + str(RUN))
     plt.show()
 
-def break_detection(x: np.ndarray):
-    diff = np.diff(x)
-    max = np.argmax(x)
-    avg_dev = np.mean(diff[(max - 150):max])
-    for i in range(max, -1, -5):
-        loc_avg_dev = np.mean(diff[(max - i - 10):(max - i)])
-        if loc_avg_dev < avg_dev - 0.05:
-            # break
-        else:
-            avg_dev = loc_avg_dev
+def find_slope(velo: np.ndarray, time: np.ndarray):
+    diff = np.diff(velo)
+    peak = np.argmax(velo)
+    baseline = np.median(velo[(peak - 350):(peak - 250)])
+    slope = diff[peak - baseline]
+
+    low = baseline + slope * 0.2
+    high = baseline + slope * 0.9
+
+    i_lo, i_hi = 0, 0
+
+    for i in range(peak):
+        if velo[i] <= i_lo:
+            i_lo = i
+        if velo[i] >= i_hi:
+            i_hi = i
+
+    ramp_t, ramp_v = [], []
+
+    for i in range(i_lo, i_hi):
+        ramp_t.append(time[i])
+        ramp_v.append(time[i])
+
+    return np.polyfit(ramp_v, ramp_t, 1)[0]
+
+
+
+
 
 
 
