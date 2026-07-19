@@ -1,4 +1,4 @@
-# physics-depth-study-velocity-derivation
+# Physics Depth Study: Velocity Derivation and Comparison of Vertical Acceleration
 Intergration is utilized to find velocity after rotating acceleration vectors to align with real-world acceleration.  
 The vertical velocity will be taken as the phone's down direction is always known, while horizontal direction
 is relative to the device's starting rotation.
