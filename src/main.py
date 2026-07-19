@@ -23,7 +23,7 @@ def rotate_all():
 
     for i in range(row_count):
         accel_vec = ACCEL[['x', 'y', 'z']].iloc[i].to_numpy()
-        orient_q = ORIENT[['qw', 'qx', 'qy', 'qz']].iloc[i].to_numpy()
+        orient_q = ORIENT[['qx', 'qy', 'qz', 'qw']].iloc[i].to_numpy()
         rotated_accel = rotate(accel_vec, orient_q)
         rotated_list.append(rotated_accel)
 
@@ -33,13 +33,13 @@ if __name__ == "__main__":
     rotated = rotate_all()
     vertical = rotated[:, -1]
     print(vertical)
-    velocity = cumtrapz(vertical)
+    velocity = cumtrapz(vertical) * 0.01
 
     v_t_table = []
 
     i = 0
     for j in velocity:
-        arr =[i * 0.1, j]
+        arr =[i * 0.01, j]
         v_t_table.append(arr)
         i += 1
 
@@ -52,7 +52,6 @@ if __name__ == "__main__":
     plt.ylabel("Velocity (m/s)")
     plt.title("Velocity over Time via Integration")
     plt.show()
-
 
 
 
