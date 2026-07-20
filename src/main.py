@@ -51,8 +51,8 @@ def graph(vt):
     velocity, time = vt
     plt.plot(time, velocity, label="Velocity", color="blue", linewidth=1)
     plt.xlabel("Time (seconds)")
-    plt.ylabel("Velocity (m/s)")
-    plt.title("Velocity over Time")
+    plt.ylabel("Downwards Velocity (m/s)")
+    plt.title("Descent Velocity over Time")
     plt.savefig(PATH + "out/run-" + OBJECT + str(RUN))
     plt.show()
 
@@ -90,4 +90,5 @@ if __name__ == '__main__':
             RUN = j
             ACCEL = pd.read_csv(PATH + "data/Obj-" + OBJECT + "-Runs/" + str(RUN) + "/Accelerometer.csv", index_col='time')
             ORIENT = pd.read_csv(PATH + "data/Obj-" + OBJECT + "-Runs/" + str(RUN) + "/Orientation.csv", index_col='time')
-            print(i + str(j) + " " + str(find_slope_midsect(integrate())))
+            # print(i + str(j) + " " + str(find_slope_midsect(integrate())))
+            graph(integrate())

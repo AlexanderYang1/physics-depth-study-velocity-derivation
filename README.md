@@ -1,12 +1,17 @@
-# Physics Depth Study: Velocity Derivation and Comparison of Vertical Acceleration
+# Physics Depth Study: Downwards Velocity Derivation and Comparison of Vertical Acceleration
 Intergration is utilized to find velocity after rotating acceleration vectors to align with real-world acceleration.  
-The vertical velocity will be taken as the phone's down direction is always known, while horizontal direction
+The downwards vertical velocity will be taken as the phone's down direction is always known, while horizontal direction
 is relative to the device's starting rotation.
 
 
 From derived velocity, motion during the descent can be identified and compared. The method utilized to derive a clean
 acceleration sample, is the taking of the mid-section of velocity ramp, and calculating the slope, deriving
 acceleration.
+
+## Structure
+`data/` contains the raw sensor data of all of the trials for Object A and Object B.  
+`out/` contains generated graphs.  
+`src/` contains the code utilized to produce derived data.
 
 ## References
 Matplotlib. (2012). *Matplotlib: Python plotting — Matplotlib 3.1.1 documentation.*
