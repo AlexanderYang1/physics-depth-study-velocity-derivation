@@ -5,8 +5,8 @@ is relative to the device's starting rotation.
 
 
 From derived velocity, motion during the descent can be identified and compared. The method utilized to derive a clean
-acceleration sample, is the taking of the mid-section of velocity ramp, and calculating the slope, deriving
-acceleration.
+acceleration sample, is the taking of the mid-section of the velocity graph where the object is descending the slope,
+and calculating the gradient, deriving acceleration.
 
 ## Structure
 `data/` contains the raw sensor data of all of the trials for Object A and Object B.  

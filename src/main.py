@@ -51,8 +51,8 @@ def graph(vt):
     velocity, time = vt
     plt.plot(time, velocity, label="Velocity", color="blue", linewidth=1)
     plt.xlabel("Time (seconds)")
-    plt.ylabel("Downwards Velocity (m/s)")
-    plt.title("Descent Velocity over Time")
+    plt.ylabel("Velocity (m/s)")
+    plt.title("Downwards Velocity over Time")
     plt.savefig(PATH + "out/run-" + OBJECT + str(RUN))
     plt.show()
 
