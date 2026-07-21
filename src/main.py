@@ -72,7 +72,7 @@ def find_slope_midsect(vt):
     for i in range(peak):
         if velo[i] <= low:
             i_lo = i
-        if velo[i] >= high:
+        if velo[i] <= high:
             i_hi = i
 
     ramp_t, ramp_v = [], []
@@ -90,5 +90,5 @@ if __name__ == '__main__':
             RUN = j
             ACCEL = pd.read_csv(PATH + "data/Obj-" + OBJECT + "-Runs/" + str(RUN) + "/Accelerometer.csv", index_col='time')
             ORIENT = pd.read_csv(PATH + "data/Obj-" + OBJECT + "-Runs/" + str(RUN) + "/Orientation.csv", index_col='time')
-            # print(i + str(j) + " " + str(find_slope_midsect(integrate()))) # Calculates acceleraton over ideal period
-            graph(integrate()) # Graphs velocity
+            print(i + str(j) + " " + str(find_slope_midsect(integrate()))) # Calculates acceleraton over ideal period
+            # graph(integrate()) # Graphs velocity
