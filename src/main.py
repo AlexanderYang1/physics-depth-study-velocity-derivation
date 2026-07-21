@@ -30,58 +30,39 @@ def rotate_all():
 
 def integrate():
     rotated = rotate_all()
-    # velocity = rotated[:, -2] # -1, -2 works
+    vertical = rotated[:, -1]
+    # print(vertical)
+    velocity = cumtrapz(vertical) * 0.01
 
-    to_find = [rotated[:, -3], rotated[:, -2], rotated[:, -1]]
-    v_t_x_table, v_t_y_table, v_t_z_table = [], [], []
-    active_table = v_t_x_table
-    counter = 0
+    v_t_table = []
 
-    for velo in to_find:
-        velocity = cumtrapz(velo) * 0.01
+    i = 0
+    for j in velocity:
+        arr =[i * 0.01, j]
+        v_t_table.append(arr)
+        i += 1
 
-        i = 0
-        for j in velocity:
-            arr = [i * 0.01, j]
-            active_table.append(arr)
-            i += 1
-
-        active_table = np.array(active_table)
-        time = active_table[:, 0]
-        velocity = active_table[:, 1]
-        if (counter == 0):
-            active_table = v_t_y_table
-        else:
-            active_table = v_t_z_table
-        counter += 1
-
-    return np.array(v_t_x_table)[:, 1], np.array(v_t_y_table)[:, 1], np.array(v_t_z_table)[:, 1], time
+    v_t_table = np.array(v_t_table)
+    time = v_t_table[:, 0]
+    velocity = v_t_table[:, 1]
+    return velocity, time
 
 def graph(vt):
-    velo_x, velo_y, velo_z, time = vt
-    resultants = np.zeros(len(velo_z))
-
-    for i in range(len(velo_z)):
-        resultants[i] = np.sqrt(velo_x[i]**2 + velo_y[i]**2 + velo_z[i]**2)
-
-    plt.plot(time, resultants, label="Velocity", color="blue", linewidth=1)
+    velocity, time = vt
+    plt.plot(time, velocity, label="Velocity", color="blue", linewidth=1)
     plt.xlabel("Time (seconds)")
     plt.ylabel("Velocity (m/s)")
-    plt.title("Velocity over Time")
+    plt.title("Downwards Velocity over Time")
     plt.savefig(PATH + "out/run-" + OBJECT + str(RUN))
     plt.show()
 
 # Go to middle of slope and fetch gradient
 def find_slope_midsect(vt):
-    velo_x, velo_y, velo_z, time = vt
-    velo = np.zeros(len(velo_z))
-
-    for i in range(len(velo_z)):
-        velo[i] = np.sqrt(velo_x[i]**2 +  velo_y[i]**2 + velo_z[i]**2)
+    velo, time = vt
     diff = np.diff(velo)
     peak = np.argmax(velo)
     baseline = np.median(velo[(peak - 350):(peak - 250)])
-    slope = velo[peak] - baseline
+    slope = velo[peak] -  baseline
 
     low = baseline + slope * 0.2
     high = baseline + slope * 0.9
@@ -91,7 +72,7 @@ def find_slope_midsect(vt):
     for i in range(peak):
         if velo[i] <= low:
             i_lo = i
-        if velo[i] <= high:
+        if velo[i] >= high:
             i_hi = i
 
     ramp_t, ramp_v = [], []
