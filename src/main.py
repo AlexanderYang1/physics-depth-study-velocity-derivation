@@ -37,7 +37,7 @@ def integrate():
     active_table = v_t_y_table
 
     for velo in to_find:
-        velocity = cumtrapz(velo) * 0.01
+        velocity = -cumtrapz(velo) * 0.01
 
         i = 0
         for j in velocity:
@@ -54,17 +54,25 @@ def integrate():
 
 def graph(vt):
     velo_y, velo_z, time = vt
+    resultants = np.zeros(len(velo_z))
 
-    plt.plot(time, velo_z, label="Velocity", color="blue", linewidth=1)
+    for i in range(len(velo_z)):
+        resultants[i] = np.sqrt(velo_y[i]**2 + velo_z[i]**2)
+
+    plt.plot(time, resultants, label="Velocity", color="blue", linewidth=1)
     plt.xlabel("Time (seconds)")
     plt.ylabel("Velocity (m/s)")
-    plt.title("Downwards Velocity over Time")
+    plt.title("Velocity over Time")
     plt.savefig(PATH + "out/run-" + OBJECT + str(RUN))
     plt.show()
 
 # Go to middle of slope and fetch gradient
 def find_slope_midsect(vt):
-    velo_y, velo, time = vt
+    velo_y, velo_z, time = vt
+    velo = np.zeros(len(velo_z))
+
+    for i in range(len(velo_z)):
+        velo[i] = np.sqrt(velo_y[i] ** 2 + velo_z[i] ** 2)
     diff = np.diff(velo)
     peak = np.argmax(velo)
     baseline = np.median(velo[(peak - 350):(peak - 250)])
