@@ -49,7 +49,24 @@ def integrate():
 
 def graph(vt):
     velocity, time = vt
+    peak = np.argmax(velocity)
+    baseline = np.median(velocity[(peak - 350):(peak - 250)])
+    slope = velocity[peak] - baseline
+
+    low = baseline + slope * 0.2
+    high = baseline + slope * 0.8
+
+    i_lo, i_hi = 0, 0
+
+    for i in range(peak):
+        if velocity[i] <= low:
+            i_lo = i
+        if velocity[i] <= high:
+            i_hi = i
+
     plt.plot(time, velocity, label="Velocity", color="blue", linewidth=1)
+    plt.plot(time[i_lo:i_hi], velocity[i_lo:i_hi], label="Constant Accel. Phase (20-80% of Descent)", color="red", linewidth=2)
+    plt.legend()
     plt.xlabel("Time (seconds)")
     plt.ylabel("Velocity (m/s)")
     plt.title("Downwards Velocity over Time")
@@ -90,5 +107,5 @@ if __name__ == '__main__':
             RUN = j
             ACCEL = pd.read_csv(PATH + "data/Obj-" + OBJECT + "-Runs/" + str(RUN) + "/Accelerometer.csv", index_col='time')
             ORIENT = pd.read_csv(PATH + "data/Obj-" + OBJECT + "-Runs/" + str(RUN) + "/Orientation.csv", index_col='time')
-            print(i + str(j) + " " + str(find_slope_midsect(integrate()))) # Calculates acceleraton over ideal period
-            # graph(integrate()) # Graphs velocity
+            # print(i + str(j) + " " + str(find_slope_midsect(integrate()))) # Calculates acceleraton over ideal period
+            graph(integrate()) # Graphs velocity
