@@ -65,7 +65,7 @@ def find_slope_midsect(vt):
     slope = velo[peak] -  baseline
 
     low = baseline + slope * 0.2
-    high = baseline + slope * 0.9
+    high = baseline + slope * 0.8
 
     i_lo, i_hi = 0, 0
 
