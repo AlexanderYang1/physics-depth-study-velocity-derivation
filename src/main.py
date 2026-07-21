@@ -32,12 +32,13 @@ def integrate():
     rotated = rotate_all()
     # velocity = rotated[:, -2] # -1, -2 works
 
-    to_find = [rotated[:, -2], rotated[:, -1]]
-    v_t_y_table, v_t_z_table = [], []
-    active_table = v_t_y_table
+    to_find = [rotated[:, -3], rotated[:, -2], rotated[:, -1]]
+    v_t_x_table, v_t_y_table, v_t_z_table = [], [], []
+    active_table = v_t_x_table
+    counter = 0
 
     for velo in to_find:
-        velocity = -cumtrapz(velo) * 0.01
+        velocity = cumtrapz(velo) * 0.01
 
         i = 0
         for j in velocity:
@@ -48,16 +49,20 @@ def integrate():
         active_table = np.array(active_table)
         time = active_table[:, 0]
         velocity = active_table[:, 1]
-        active_table = v_t_z_table
+        if (counter == 0):
+            active_table = v_t_y_table
+        else:
+            active_table = v_t_z_table
+        counter += 1
 
-    return np.array(v_t_y_table)[:, 1], np.array(v_t_z_table)[:, 1], time
+    return np.array(v_t_x_table)[:, 1], np.array(v_t_y_table)[:, 1], np.array(v_t_z_table)[:, 1], time
 
 def graph(vt):
-    velo_y, velo_z, time = vt
+    velo_x, velo_y, velo_z, time = vt
     resultants = np.zeros(len(velo_z))
 
     for i in range(len(velo_z)):
-        resultants[i] = np.sqrt(velo_y[i]**2 + velo_z[i]**2)
+        resultants[i] = np.sqrt(velo_x[i]**2 + velo_y[i]**2 + velo_z[i]**2)
 
     plt.plot(time, resultants, label="Velocity", color="blue", linewidth=1)
     plt.xlabel("Time (seconds)")
@@ -68,11 +73,11 @@ def graph(vt):
 
 # Go to middle of slope and fetch gradient
 def find_slope_midsect(vt):
-    velo_y, velo_z, time = vt
+    velo_x, velo_y, velo_z, time = vt
     velo = np.zeros(len(velo_z))
 
     for i in range(len(velo_z)):
-        velo[i] = np.sqrt(velo_y[i] ** 2 + velo_z[i] ** 2)
+        velo[i] = np.sqrt(velo_x[i]**2 +  velo_y[i]**2 + velo_z[i]**2)
     diff = np.diff(velo)
     peak = np.argmax(velo)
     baseline = np.median(velo[(peak - 350):(peak - 250)])
@@ -86,7 +91,7 @@ def find_slope_midsect(vt):
     for i in range(peak):
         if velo[i] <= low:
             i_lo = i
-        if velo[i] >= high:
+        if velo[i] <= high:
             i_hi = i
 
     ramp_t, ramp_v = [], []
