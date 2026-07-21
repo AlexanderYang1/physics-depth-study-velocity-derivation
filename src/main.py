@@ -30,26 +30,32 @@ def rotate_all():
 
 def integrate():
     rotated = rotate_all()
-    vertical = rotated[:, -1]
-    # print(vertical)
-    velocity = cumtrapz(vertical) * 0.01
+    # velocity = rotated[:, -2] # -1, -2 works
 
-    v_t_table = []
+    to_find = [rotated[:, -2], rotated[:, -1]]
+    v_t_y_table, v_t_z_table = [], []
+    active_table = v_t_y_table
 
-    i = 0
-    for j in velocity:
-        arr =[i * 0.01, j]
-        v_t_table.append(arr)
-        i += 1
+    for velo in to_find:
+        velocity = cumtrapz(velo) * 0.01
 
-    v_t_table = np.array(v_t_table)
-    time = v_t_table[:, 0]
-    velocity = v_t_table[:, 1]
-    return velocity, time
+        i = 0
+        for j in velocity:
+            arr = [i * 0.01, j]
+            active_table.append(arr)
+            i += 1
+
+        active_table = np.array(active_table)
+        time = active_table[:, 0]
+        velocity = active_table[:, 1]
+        active_table = v_t_z_table
+
+    return np.array(v_t_y_table)[:, 1], np.array(v_t_z_table)[:, 1], time
 
 def graph(vt):
-    velocity, time = vt
-    plt.plot(time, velocity, label="Velocity", color="blue", linewidth=1)
+    velo_y, velo_z, time = vt
+
+    plt.plot(time, velo_z, label="Velocity", color="blue", linewidth=1)
     plt.xlabel("Time (seconds)")
     plt.ylabel("Velocity (m/s)")
     plt.title("Downwards Velocity over Time")
@@ -58,11 +64,11 @@ def graph(vt):
 
 # Go to middle of slope and fetch gradient
 def find_slope_midsect(vt):
-    velo, time = vt
+    velo_y, velo, time = vt
     diff = np.diff(velo)
     peak = np.argmax(velo)
     baseline = np.median(velo[(peak - 350):(peak - 250)])
-    slope = velo[peak] -  baseline
+    slope = velo[peak] - baseline
 
     low = baseline + slope * 0.2
     high = baseline + slope * 0.9
