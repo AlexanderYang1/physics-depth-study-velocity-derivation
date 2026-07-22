@@ -113,7 +113,7 @@ def output_baro_drop_aligned_accel_values(vt):
         time_smpl = row['seconds_elapsed']
         near_baro_time = (time >= time_smpl - 0.5) & (time <= time_smpl + 0.5)
         v = velo[near_baro_time].mean() - baseline
-        print(round(time_smpl, 1), round(row['relativeAltitude'], 2), round(v, 2), sep=", ")
+        print(round(time_smpl, 1), round(row['relativeAltitude'], 3), round(v, 3), sep=", ")
 
 
 if __name__ == '__main__':
