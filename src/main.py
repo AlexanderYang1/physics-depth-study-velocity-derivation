@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from pandas.core.indexes import interval
 from scipy.spatial.transform import Rotation as R
 from scipy.integrate import cumulative_trapezoid as cumtrapz
 import matplotlib.pyplot as plt
@@ -79,6 +80,7 @@ def find_slope_midsect(vt):
     diff = np.diff(velo)
     peak = np.argmax(velo)
     baseline = np.median(velo[(peak - 350):(peak - 250)])
+    print(np.max(velo) - baseline)
     slope = velo[peak] -  baseline
 
     low = baseline + slope * 0.2
@@ -117,8 +119,8 @@ def output_baro_drop_aligned_accel_values(vt):
 
 
 if __name__ == '__main__':
-    output_baro_drop_aligned_accel_values(integrate()) # output graph values
-    exit(0)
+    # output_baro_drop_aligned_accel_values(integrate()) # output graph values
+    # exit(0)
     for i in ['A', 'B']:
         OBJECT = i
         for j in [1, 2, 3, 4, 5]:
@@ -127,3 +129,4 @@ if __name__ == '__main__':
             ORIENT = pd.read_csv(PATH + "data/Obj-" + OBJECT + "-Runs/" + str(RUN) + "/Orientation.csv", index_col='time')
             # print(i + str(j) + " " + str(find_slope_midsect(integrate()))) # Calculates acceleraton over ideal period
             # graph(integrate()) # Graphs velocity
+            find_slope_midsect(integrate())
