@@ -4,8 +4,8 @@ from scipy.spatial.transform import Rotation as R
 from scipy.integrate import cumulative_trapezoid as cumtrapz
 import matplotlib.pyplot as plt
 
-OBJECT = 'B'
-RUN = 5
+OBJECT = 'A'
+RUN = 1
 
 PATH = "/Users/alexanderyang/Documents/Main Directory/Programming/physics-depth-study-velocity-derivation/"
 ACCEL = pd.read_csv(PATH + "data/Obj-" + OBJECT + "-Runs/" + str(RUN) + "/Accelerometer.csv", index_col='time')
@@ -100,7 +100,25 @@ def find_slope_midsect(vt):
 
     return np.polyfit(ramp_t, ramp_v, 1)[0]
 
+def output_baro_drop_aligned_accel_values(vt):
+    # ONLY USE FOR A 1
+    velo, time = vt
+    Baro = pd.read_csv(PATH + "data/Obj-" + OBJECT + "-Runs/" + str(RUN) + "/Barometer.csv", index_col='time')
+    lo, hi = 53.665540039, 61.07724951
+    baseline = np.median(velo[(time > 49) & (time < 53)])
+    baro_window = Baro[(Baro['seconds_elapsed'] >= lo) & (Baro['seconds_elapsed'] <= hi)]
+    print("time_s, altitude_m, velocity_ms")
+
+    for _, row in baro_window.iterrows():
+        time_smpl = row['seconds_elapsed']
+        near_baro_time = (time >= time_smpl - 0.5) & (time <= time_smpl + 0.5)
+        v = velo[near_baro_time].mean() - baseline
+        print(round(time_smpl, 1), round(row['relativeAltitude'], 2), round(v, 2), sep=", ")
+
+
 if __name__ == '__main__':
+    output_baro_drop_aligned_accel_values(integrate()) # output graph values
+    exit(0)
     for i in ['A', 'B']:
         OBJECT = i
         for j in [1, 2, 3, 4, 5]:
@@ -108,4 +126,4 @@ if __name__ == '__main__':
             ACCEL = pd.read_csv(PATH + "data/Obj-" + OBJECT + "-Runs/" + str(RUN) + "/Accelerometer.csv", index_col='time')
             ORIENT = pd.read_csv(PATH + "data/Obj-" + OBJECT + "-Runs/" + str(RUN) + "/Orientation.csv", index_col='time')
             # print(i + str(j) + " " + str(find_slope_midsect(integrate()))) # Calculates acceleraton over ideal period
-            graph(integrate()) # Graphs velocity
+            # graph(integrate()) # Graphs velocity
